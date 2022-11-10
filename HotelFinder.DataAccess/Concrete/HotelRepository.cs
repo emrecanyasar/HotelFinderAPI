@@ -42,7 +42,7 @@ namespace HotelFinder.DataAccess.Concrete
         {
             using (var hotelDbContext = new HotelDbContext())
             {
-                return hotelDbContext.Hotels.Find();
+                return hotelDbContext.Hotels.Find(id);
             }
         }
 

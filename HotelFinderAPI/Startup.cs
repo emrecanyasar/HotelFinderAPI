@@ -33,25 +33,32 @@ namespace HotelFinderAPI
             services.AddControllers();
             services.AddSingleton<IHotelService, HotelManager>();
             services.AddSingleton<IHotelRepository, HotelRepository>();
-            services.AddSwaggerGen(c =>
+            services.AddSwaggerDocument(config =>
             {
-                c.SwaggerDoc("v1", new OpenApiInfo { Title = "HotelFinderAPI", Version = "v1" });
+                config.PostProcess = (doc =>
+                {
+                    doc.Info.Title = "All Hotels Api";
+                    doc.Info.Version = "1.0.13";
+                    doc.Info.Contact = new NSwag.OpenApiContact()
+                    {
+                        Name = "emrecan",
+                        Url = "https://github.com/emrecanyasar"
+                    };
+                });
             });
         }
-
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseSwagger();
-                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "HotelFinderAPI v1"));
             }
 
             app.UseRouting();
 
-            app.UseAuthorization();
+            app.UseOpenApi();
+            app.UseSwaggerUi3();
 
             app.UseEndpoints(endpoints =>
             {

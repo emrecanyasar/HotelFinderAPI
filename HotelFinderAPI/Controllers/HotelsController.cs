@@ -34,11 +34,24 @@ namespace HotelFinderAPI.Controllers
         /// Get Hotels By Id
         /// </summary>
         /// <returns></returns>
-        [HttpGet("{id}")]
-        public IActionResult Get(int id)
+        [HttpGet]
+        [Route("[action]/{id}")] // api/hotels/GetHotelById/1
+        public IActionResult GetHotelById(int id)
         {
             var hotel= _hotelService.GetHotelById(id);
             if (hotel!=null)
+            {
+                return Ok(hotel);//200+data
+            }
+            return NotFound();//404
+        }
+
+        [HttpGet]
+        [Route("[action]/{name}")] // api/hotels/GetHotelByName/1
+        public IActionResult GetHotelByName(string name)
+        {
+            var hotel = _hotelService.GetHotelByName(name);
+            if (hotel != null)
             {
                 return Ok(hotel);//200+data
             }
@@ -50,7 +63,8 @@ namespace HotelFinderAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPost]
-        public IActionResult Post([FromBody]Hotel hotel)
+        [Route("[action]")]
+        public IActionResult CreateHotel([FromBody]Hotel hotel)
         {
            var createdHotel=_hotelService.CreateHotel(hotel);
             return CreatedAtAction("Get", new { id = createdHotel.Id }, createdHotel);
@@ -61,7 +75,8 @@ namespace HotelFinderAPI.Controllers
         /// </summary>
         /// <returns></returns>
         [HttpPut]
-        public IActionResult Put([FromBody] Hotel hotel)
+        [Route("[action]/{id}")]
+        public IActionResult UpdateHotel([FromBody] Hotel hotel)
         {
             if (_hotelService.GetHotelById(hotel.Id) != null)
             {
@@ -74,8 +89,9 @@ namespace HotelFinderAPI.Controllers
         /// Delete the Hotels
         /// </summary>
         /// <returns></returns>
-        [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        [HttpDelete]
+        [Route("[action]")]
+        public IActionResult DeleteHotel(int id)
         {
             if (_hotelService.GetHotelById(id) != null)
             {
